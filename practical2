@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+
+using namespace std;
+using namespace chrono;
+
+// Linear Search
+int linearSearch(const vector<int> &numbers, int target)
+{
+    for (int i = 0; i < numbers.size(); i++)
+    {
+        if (numbers[i] == target)
+            return i;
+    }
+    return -1;
+}
+
+// Binary Search
+int binarySearch(const vector<int> &numbers, int target)
+{
+    int left = 0;
+    int right = numbers.size() - 1;
+
+    while (left <= right)
+    {
+        int middle = (left + right) / 2;
+
+        if (numbers[middle] == target)
+            return middle;
+
+        if (numbers[middle] < target)
+            left = middle + 1;
+        else
+            right = middle - 1;
+    }
+
+    return -1;
+}
+
+int main()
+{
+    int size, searchKey;
+
+    cout << "Enter size of array: ";
+    cin >> size;
+
+    vector<int> numbers(size);
+
+    cout << "Enter " << size << " elements in sorted order:\n";
+    for (int i = 0; i < size; i++)
+    {
+        cin >> numbers[i];
+    }
+
+    cout << "Enter element to search: ";
+    cin >> searchKey;
+
+    // Linear Search
+    auto start1 = high_resolution_clock::now();
+    int linearResult = linearSearch(numbers, searchKey);
+    auto end1 = high_resolution_clock::now();
+
+    cout << "\n----- Linear Search -----\n";
+    if (linearResult != -1)
+        cout << "Element found at position: " << linearResult + 1 << endl;
+    else
+        cout << "Element not found" << endl;
+
+    cout << "Execution Time: "
+         << duration_cast<nanoseconds>(end1 - start1).count()
+         << " nanoseconds\n";
+
+    // Binary Search
+    auto start2 = high_resolution_clock::now();
+    int binaryResult = binarySearch(numbers, searchKey);
+    auto end2 = high_resolution_clock::now();
+
+    cout << "\n----- Binary Search -----\n";
+    if (binaryResult != -1)
+        cout << "Element found at position: " << binaryResult + 1 << endl;
+    else
+        cout << "Element not found" << endl;
+
+    cout << "Execution Time: "
+         << duration_cast<nanoseconds>(end2 - start2).count()
+         << " nanoseconds\n";
+
+    return 0;
+}

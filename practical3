@@ -1,0 +1,112 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <cstdlib>
+
+using namespace std;
+using namespace std::chrono;
+
+//---------- Max Heap ----------//
+void buildMax(vector<int> &a, int size, int root)
+{
+    int biggest = root;
+    int l = 2 * root + 1;
+    int r = 2 * root + 2;
+
+    if (l < size && a[l] > a[biggest])
+        biggest = l;
+
+    if (r < size && a[r] > a[biggest])
+        biggest = r;
+
+    if (biggest != root)
+    {
+        swap(a[root], a[biggest]);
+        buildMax(a, size, biggest);
+    }
+}
+
+void heapSortMax(vector<int> &a)
+{
+    int size = a.size();
+
+    for (int i = size / 2 - 1; i >= 0; i--)
+        buildMax(a, size, i);
+
+    for (int i = size - 1; i > 0; i--)
+    {
+        swap(a[0], a[i]);
+        buildMax(a, i, 0);
+    }
+}
+
+//---------- Min Heap ----------//
+void buildMin(vector<int> &a, int size, int root)
+{
+    int smallest = root;
+    int l = 2 * root + 1;
+    int r = 2 * root + 2;
+
+    if (l < size && a[l] < a[smallest])
+        smallest = l;
+
+    if (r < size && a[r] < a[smallest])
+        smallest = r;
+
+    if (smallest != root)
+    {
+        swap(a[root], a[smallest]);
+        buildMin(a, size, smallest);
+    }
+}
+
+void heapSortMin(vector<int> &a)
+{
+    int size = a.size();
+
+    for (int i = size / 2 - 1; i >= 0; i--)
+        buildMin(a, size, i);
+
+    for (int i = size - 1; i > 0; i--)
+    {
+        swap(a[0], a[i]);
+        buildMin(a, i, 0);
+    }
+
+    for (int i = 0, j = size - 1; i < j; i++, j--)
+        swap(a[i], a[j]);
+}
+
+int main()
+{
+    int n;
+
+    cout << "Enter Array Size : ";
+    cin >> n;
+
+    vector<int> values(n);
+
+    for (int i = 0; i < n; i++)
+        values[i] = rand() % 50000;
+
+    vector<int> maxData = values;
+    vector<int> minData = values;
+
+    auto t1 = high_resolution_clock::now();
+    heapSortMax(maxData);
+    auto t2 = high_resolution_clock::now();
+
+    auto t3 = high_resolution_clock::now();
+    heapSortMin(minData);
+    auto t4 = high_resolution_clock::now();
+
+    cout << "\nMAX Heap Sort Time : "
+         << duration_cast<microseconds>(t2 - t1).count()
+         << " microseconds";
+
+    cout << "\nMIN Heap Sort Time : "
+         << duration_cast<microseconds>(t4 - t3).count()
+         << " microseconds";
+
+    return 0;
+}

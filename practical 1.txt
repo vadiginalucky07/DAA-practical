@@ -1,0 +1,136 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Bubble Sort
+void bubbleSort(vector<int> a) {
+    int n = a.size();
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (a[j] > a[j + 1]) {
+                swap(a[j], a[j + 1]);
+            }
+        }
+    }
+
+    cout << "Bubble Sort: ";
+    for (int x : a)
+        cout << x << " ";
+    cout << endl;
+}
+
+// Selection Sort
+void selectionSort(vector<int> a) {
+    int n = a.size();
+    for (int i = 0; i < n - 1; i++) {
+        int min = i;
+        for (int j = i + 1; j < n; j++) {
+            if (a[j] < a[min])
+                min = j;
+        }
+        swap(a[i], a[min]);
+    }
+
+    cout << "Selection Sort: ";
+    for (int x : a)
+        cout << x << " ";
+    cout << endl;
+}
+
+// Insertion Sort
+void insertionSort(vector<int> a) {
+    int n = a.size();
+    for (int i = 1; i < n; i++) {
+        int key = a[i];
+        int j = i - 1;
+        while (j >= 0 && a[j] > key) {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = key;
+    }
+
+    cout << "Insertion Sort: ";
+    for (int x : a)
+        cout << x << " ";
+    cout << endl;
+}
+
+// Merge Sort
+void merge(vector<int> &a, int l, int m, int r) {
+    vector<int> temp;
+    int i = l, j = m + 1;
+
+    while (i <= m && j <= r) {
+        if (a[i] <= a[j])
+            temp.push_back(a[i++]);
+        else
+            temp.push_back(a[j++]);
+    }
+
+    while (i <= m)
+        temp.push_back(a[i++]);
+
+    while (j <= r)
+        temp.push_back(a[j++]);
+
+    for (int k = l; k <= r; k++)
+        a[k] = temp[k - l];
+}
+
+void mergeSort(vector<int> &a, int l, int r) {
+    if (l < r) {
+        int m = (l + r) / 2;
+        mergeSort(a, l, m);
+        mergeSort(a, m + 1, r);
+        merge(a, l, m, r);
+    }
+}
+
+// Quick Sort
+int partition(vector<int> &a, int low, int high) {
+    int pivot = a[high];
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        if (a[j] < pivot) {
+            i++;
+            swap(a[i], a[j]);
+        }
+    }
+
+    swap(a[i + 1], a[high]);
+    return i + 1;
+}
+
+void quickSort(vector<int> &a, int low, int high) {
+    if (low < high) {
+        int pi = partition(a, low, high);
+        quickSort(a, low, pi - 1);
+        quickSort(a, pi + 1, high);
+    }
+}
+
+int main() {
+    vector<int> arr = {64, 34, 25, 12, 22, 11, 90};
+
+    bubbleSort(arr);
+    selectionSort(arr);
+    insertionSort(arr);
+
+    vector<int> mergeArr = arr;
+    mergeSort(mergeArr, 0, mergeArr.size() - 1);
+    cout << "Merge Sort: ";
+    for (int x : mergeArr)
+        cout << x << " ";
+    cout << endl;
+
+    vector<int> quickArr = arr;
+    quickSort(quickArr, 0, quickArr.size() - 1);
+    cout << "Quick Sort: ";
+    for (int x : quickArr)
+        cout << x << " ";
+    cout << endl;
+
+    return 0;
+}

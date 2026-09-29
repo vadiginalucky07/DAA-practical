@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <vector>
+#include <chrono>
+
+using namespace std;
+
+int main()
+{
+    int n, amount;
+
+    vector<int> coins;
+    vector<int> dp;
+
+    printf("Enter number of coins: ");
+    scanf("%d", &n);
+
+    printf("Enter the coin values:\n");
+
+    for(int i = 0; i < n; i++)
+    {
+        int coin;
+        scanf("%d", &coin);
+        coins.push_back(coin);
+    }
+
+    printf("Enter the amount: ");
+    scanf("%d", &amount);
+
+    // Start time
+    auto start = chrono::high_resolution_clock::now();
+
+    // Initialize DP array
+    dp.resize(amount + 1, 0);
+
+    // There is one way to make amount 0
+    dp[0] = 1;
+
+    // Dynamic Programming
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = coins[i]; j <= amount; j++)
+        {
+            dp[j] = dp[j] + dp[j - coins[i]];
+        }
+    }
+
+    // End time
+    auto end = chrono::high_resolution_clock::now();
+
+    // Calculate execution time
+    auto duration =
+        chrono::duration_cast<chrono::microseconds>(end - start);
+
+    printf("\nNumber of ways to make change = %d\n", dp[amount]);
+    printf("Execution time = %lld microseconds\n", duration.count());
+
+    return 0;
+}
